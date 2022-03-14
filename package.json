@@ -1,0 +1,32 @@
+{
+  "name": "fota-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NEXTTTTTTT/FOTA-BACKEND.git"
+  },
+  "keywords": [
+    "fota"
+  ],
+  "author": "mahmoud & shereen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NEXTTTTTTT/FOTA-BACKEND/issues"
+  },
+  "homepage": "https://github.com/NEXTTTTTTT/FOTA-BACKEND#readme",
+  "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "body-parser": "^1.19.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "aedes": "^0.46.3",
+    "net": "^1.0.2",
+    "mongoose": "^6.2.4"
+  }
+}
