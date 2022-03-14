@@ -31,13 +31,26 @@ const userRoute = require('./routes/user_router');
 const firmwareRoute = require('./routes/firmware_router');
 const employeeRoute = require('./routes/employee_router');
 
-// use routes
-app.use("/api/v1",carRoute);
-app.use("/api/v1",userRoute);
-app.use("/api/v1",employeeRoute);
-app.use("/api/v1",firmwareRoute);
+// // use routes
+// app.use("/api/v1",carRoute);
+// app.use("/api/v1",userRoute);
+// app.use("/api/v1",employeeRoute);
+// app.use("/api/v1",firmwareRoute);
 
 // server listen
 app.listen(3000,()=>{
     console.log('server start ....');
+})
+
+// broker setup
+const aedes = require('aedes')();
+const server = require('net').createServer(aedes.handle);
+const PORT = 1234;
+
+server.listen(PORT, function () {
+    console.log(`MQTT Broker running on port: ${PORT}`);
+});
+
+server.on('publish',(packet)=>{
+     //todo: onPublish()
 })
