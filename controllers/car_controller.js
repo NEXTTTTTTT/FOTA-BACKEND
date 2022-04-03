@@ -1,76 +1,65 @@
-exports.getCarsList = async (req, res) => {
-  try {
-    const result = await Car.find();
-    return res.status(200).send(result);
-  } catch (error) {
-    console.log("error : " + error);
-    return res.status(500).send({ error: "failed to list cars" });
-  }
-};
+const Cars = require("../model/car");
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
-exports.getCarDetails = async (req, res) => {
-  try {
-    var id = req.params.id;
-    if (!id) {
-      return res.status(500).send({ error: "id can't be empty" });
+const carCtrl = {
+  createCar :async(req,res)=>{
+    try {
+      const {code,password,version,createdBy}= req.body;
+      const newCarCode = code.toLowerCase().replace(/ /g, "");
+
+      const car = await Cars.findOne({ code: newCarCode });
+      if (car)
+        return res.status(400).json({ msg: "this code already exists" });
+
+      if (password.length < 6)
+        return res
+          .status(400)
+          .json({ msg: "password must be atleast 6 characters long" });
+
+      const passwordHash = await bcrypt.hash(password, 13);
+
+      const newCar = new Cars({
+        version:version,
+        code: newCarCode,
+        password: passwordHash,
+        createdBy:createdBy
+      });
+
+      await newCar.save();
+      res.status(200).json({
+        msg: "Car added sucessfully",
+        car: {
+          ...newCar._doc,
+          password: "",
+        },
+      });
+    } catch (err) {
+      return res.status(500).json({msg:err.message});
     }
-    var result = await Car.find(id);
-    return res.status(200).send(result);
-  } catch (error) {
-    console.log("error : " + error);
-    return res.status(500).send({ error: "failed to get car details" });
-  }
-};
+  },
+  getCarsList: async(req,res)=>{
+    try {
+      const cars =await  Cars.find().populate("admin users");
+      if(!cars){
+        return res.status(400).json({msg:"cars not found"})
+      }
+      return res.status(200).json({msg:"success",cars})
+    } catch (err) {
+      return res.status(500).json({msg:err.message});
+    }
+  },
+  deleteCar: async(req,res)=>{
+    try {
+      const {code} = req.params.code;
+      await Cars.deleteOne({code:code})
+      res.status(200).json({msg:"car deleted successfully"})
 
-exports.createCar = async (req, res) => {
-  try {
-    var car = new Car({
-      carCode: req.body.carCode,
-      password: req.body.password,
-      carType: req.body.carType,
-      adminID: req.body.adminID,
-      usersIDs: req.body.usersIDs,
-      isActive: req.body.isActive,
-      carLocation: req.body.carLocation,
-      defaultSpeed: req.body.defaultSpeed,
-      curentSpeed: req.body.curentSpeed,
-      systemVersion: req.body.systemVersion,
-      createdOn: req.body.createdOn,
-      createdBy: req.body.createdBy,
-    });
-    car.save();
-    return res.status(201).send("successfuly car created");
-  } catch (error) {
-    console.error("error : " + error);
-    return res.status(500).send({ error: "failed to save car" });
+    } catch (err) {
+      res.status(500).json({msg:err.message})
+    }
   }
-};
 
-exports.modifyCar = async (req, res) => {
-  try {
-    var id = req.body.id;
-    const query = { _id: id };
-    Car.update(query, {
-      $set: {
-        // todo : set
-      },
-    });
+}
 
-    return res.status(201).send("successfuly car updated");
-  } catch (error) {
-    console.error("error : " + error);
-    return res.status(500).send({ error: "failed to update the car" });
-  }
-};
-
-exports.deleteCar = async (req, res) => {
-  try {
-    var id = req.body.id;
-    const query = { _id: id };
-    Car.delete(query);
-    return res.status(201).send("successfuly car deleted");
-  } catch (error) {
-    console.error("error : " + error);
-    return res.status(500).send({ error: "failed to delete the car" });
-  }
-};
+module.exports = carCtrl;

@@ -1,9 +1,9 @@
+const { default: mongoose } = require("mongoose");
+
 const CarScheme = mongoose.Schema({
-  carCode: { type: String, required: true,trim:true },
+  code: { type: String, required: true,trim:true,unique:true },
   password: { type: String, required: true },
   carType: { type: String },
-  adminID: { type: String },
-  usersIDs: { type: [String] },
   isActive: { type: Boolean, default: false },
   carLocation: {
     type: String,
@@ -13,35 +13,27 @@ const CarScheme = mongoose.Schema({
       },
     },
   },
+  admin:{type:mongoose.Types.ObjectId,ref:'user'},
+  users:[{type:mongoose.Types.ObjectId,ref:'user'}],
   defaultSpeed: { type: Number, default: 120 },
   curentSpeed: {
     type: Number,
     min: [0, `the speed can't be less than zero`],
     default: 0,
   },
-  systemVersion: {
+  version: {
     type: String,
     required: true,
     lowercase: true,
   },
-  createdOn: {
-    type: Date,
-    default: Date.now
-  },
   createdBy: {
       type: String,
-      default: "Salma",
-      validate: {
-        validitor: {
-          function(params) {
-            // todo : check if the params existed in database in employees collection
-          },
-        },
-        message: `not existed in employees`,
-      },
+      default: "Adminstrator",
     },
-  },
+  },{
+    timestamps:true
+  }
 );
 
-const Car = mongoose.model("Car", CarScheme);
+module.exports = mongoose.model("car", CarScheme);
 

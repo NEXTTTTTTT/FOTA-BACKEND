@@ -1,13 +1,13 @@
 const express = require('express');
-const { route } = require('express/lib/application');
 const router = express.Router();
+const auth = require('../middlewares/auth');
 
-var carController = require('../controllers/car_controller');
+const carController = require('../controllers/car_controller');
 
-router.get("/cars",carController.getCarsList);
-router.get("/cars/details/:id",carController.getCarDetails);
-router.post("/cars/create",carController.createCar);
-router.post("/cars/modify",carController.modifyCar);
-router.delete("/cars/delete",carController.deleteCar);
+/// Needed in web site
+router.get("/cars/all",auth,carController.getCarsList);
+router.post("/cars/create",auth,carController.createCar);
+router.delete("/cars/delete/:code",auth,carController.deleteCar);
+
 
 module.exports = router

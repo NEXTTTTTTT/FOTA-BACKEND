@@ -1,56 +1,60 @@
-const express =require('express');
-const app = express();
+const express = require("express");
+const cors = require("cors");
+const cookieparser = require("cookie-parser");
+const mongoose = require("mongoose");
+require("dotenv").config();
 
-const cors = require('cors');
+const port = process.env.PORT || 5000;
+const brokerPort = process.env.BROKER_PORT;
+const URL = process.env.MONGO_URI;
+
+const app = express();
+app.use(express.json()); // for body parsing..
 app.use(cors());
+app.use(cookieparser());
 
 // mongodb connection
-const mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost/fota", {
+mongoose
+  .connect(URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log("Connected to database"))
+  .then(() => console.log("db connected .."))
   .catch((error) => {
     console.error("error! " + error);
   });
 
-var bodyParser = require('body-parser');
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
-// parse application/json
-app.use(bodyParser.json())
+// socket io
+const http = require("http").createServer(app);
+const io = require("socket.io")(http);
 
-app.get("/",function(req,res){
-    res.send('Hello from server');
-})
-
-// import routers
-const carRoute = require('./routes/car_router');
-const userRoute = require('./routes/user_router');
-const firmwareRoute = require('./routes/firmware_router');
-const employeeRoute = require('./routes/employee_router');
-
-// // use routes
-// app.use("/api/v1",carRoute);
-// app.use("/api/v1",userRoute);
-// app.use("/api/v1",employeeRoute);
-// app.use("/api/v1",firmwareRoute);
-
-// server listen
-app.listen(3000,()=>{
-    console.log('server start ....');
-})
-
-// broker setup
-const aedes = require('aedes')();
-const server = require('net').createServer(aedes.handle);
-const PORT = 1234;
-
-server.listen(PORT, function () {
-    console.log(`MQTT Broker running on port: ${PORT}`);
+app.get("/", function (req, res) {
+  res.send("Hello from server");
 });
 
-server.on('publish',(packet)=>{
-     //todo: onPublish()
-})
+// import routers
+const authRoute = require("./routes/auth_router");
+const userRoute = require("./routes/user_router");
+const carRoute = require("./routes/car_router");
+
+// use routes
+app.use("/api/v1", authRoute);
+app.use("/api/v1", userRoute);
+app.use("/api/v1", carRoute);
+
+// server listen
+app.listen(port, () => {
+  console.log(`server start on port ${port}`);
+});
+
+// broker setup
+const aedes = require("aedes")();
+const broker = require("net").createServer(aedes.handle);
+
+broker.listen(brokerPort, function () {
+  console.log(`MQTT Broker running on port: ${brokerPort}`);
+});
+
+broker.on("publish", (packet) => {
+  // TODO: on publish , we should update database depends on different topics
+});
