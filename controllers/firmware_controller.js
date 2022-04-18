@@ -1,6 +1,4 @@
 const Firmeware = require("../model/firmware");
-const mongoose = require("mongoose");
-
 
 const firmwareCtrl = {
   createFirmware :async(req,res)=>{

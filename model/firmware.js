@@ -13,4 +13,4 @@ const FirmwareScheme = mongoose.Schema(
   { Timestamps: true }
 );
 
-const Firmaware = mongoose.model("Firmware", FirmwareScheme);
+module.exports = mongoose.model("firmware", FirmwareScheme);
