@@ -1,25 +1,16 @@
-const FirmwareScheme = mongoose.Schema({
-    ChipCode: { type: String, required: true },
-    versionName: { type: String, required: true },
+const mongoose = require("mongoose");
+const FirmwareScheme = mongoose.Schema(
+  {
+    versionName: { type: String, required: true,unique:true },
     description: { type: String },
-    file: { type: File },
-    createdOn: {
-      type: Date,
-      default: Date.now
-    },
+    file: { type: String, required: true },
     createdBy: {
-        type: String,
-        default: "Salma",
-        validate: {
-          validitor: {
-            function(params) {
-              // todo : check if the params existed in database in employees collection
-            },
-          },
-          message: `not existed in employees`,
-        },
-      },
+      type: String,
+      default: "Adminstrator",
+      required: true,
     },
-  );
-  
-  const Firmaware = mongoose.model("Firmware", FirmwareScheme);
+  },
+  { Timestamps: true }
+);
+
+const Firmaware = mongoose.model("Firmware", FirmwareScheme);

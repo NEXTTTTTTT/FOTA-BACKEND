@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const carCtrl = {
   createCar :async(req,res)=>{
     try {
-      const {code,password,version,createdBy}= req.body;
+      const {code,password,firmware,createdBy}= req.body;
       const newCarCode = code.toLowerCase().replace(/ /g, "");
 
       const car = await Cars.findOne({ code: newCarCode });
@@ -20,7 +20,7 @@ const carCtrl = {
       const passwordHash = await bcrypt.hash(password, 13);
 
       const newCar = new Cars({
-        version:version,
+        firmware:mongoose.Types.ObjectId(firmware),
         code: newCarCode,
         password: passwordHash,
         createdBy:createdBy
@@ -40,7 +40,7 @@ const carCtrl = {
   },
   getCarsList: async(req,res)=>{
     try {
-      const cars =await  Cars.find().populate("admin users");
+      const cars =await  Cars.find().populate("admin users","-password");
       if(!cars){
         return res.status(400).json({msg:"cars not found"})
       }
@@ -51,8 +51,8 @@ const carCtrl = {
   },
   deleteCar: async(req,res)=>{
     try {
-      const {code} = req.params.code;
-      await Cars.deleteOne({code:code})
+      const {code} = req.body;
+      await Cars.deleteOne({code:code});
       res.status(200).json({msg:"car deleted successfully"})
 
     } catch (err) {
