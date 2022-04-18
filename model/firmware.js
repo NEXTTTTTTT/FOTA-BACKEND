@@ -10,7 +10,7 @@ const FirmwareScheme = mongoose.Schema(
       required: true,
     },
   },
-  { Timestamps: true }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("firmware", FirmwareScheme);
