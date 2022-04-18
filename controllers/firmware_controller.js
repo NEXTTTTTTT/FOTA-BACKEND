@@ -22,7 +22,7 @@ const firmwareCtrl = {
   },
   getLatestFirmware: async(req,res)=>{
     try {
-      const firmware =await  Firmeware.findOne().sort({createdAt});
+      const firmware =await  Firmeware.findOne();
       return res.status(200).json({msg:"success",firmware:firmware});
 
     } catch (err) {
