@@ -29,7 +29,7 @@ mongoose
   });
 
 app.get("/", function (req, res) {
-  res.send("Hello from server");
+  res.send("HELLO, WE ARE FOTA TEAM!");
 });
 
 // import routers
