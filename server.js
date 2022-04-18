@@ -7,6 +7,7 @@ const publishCtrl = require("./publish_control");
 
 const port = process.env.PORT || 5000;
 const brokerPort = process.env.BROKER_PORT;
+const wsPort = process.env.WS_PORT;
 const URL = process.env.MONGO_URI;
 
 const app = express();
@@ -25,9 +26,6 @@ mongoose
     console.error("error! " + error);
   });
 
-// socket io
-const http = require("http").createServer(app);
-const io = require("socket.io")(http);
 
 app.get("/", function (req, res) {
   res.send("Hello from server");
@@ -50,14 +48,22 @@ app.listen(port, () => {
   console.log(`server start on port ${port}`);
 });
 
+
+
 // broker setup
 const aedes = require("aedes")();
-const broker = require("net").createServer(aedes.handle);
+const server = require("net").createServer(aedes.handle);
+let ws = require('websocket-stream');
 
-broker.listen(brokerPort, function () {
+server.listen(brokerPort, function () {
   console.log(`MQTT Broker running on port: ${brokerPort}`);
 });
 
+ws.createServer({ server: server }, aedes.handle);
+
+server.listen(wsPort, function () {
+  console.log('WS server listening on port', config.ws_port);
+});
 
 // emitted when a client publishes a message packet on the topic
 aedes.on("publish", async function (packet, client) {
