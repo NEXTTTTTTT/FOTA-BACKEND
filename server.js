@@ -7,6 +7,9 @@ const publishCtrl = require("./publish_control");
 
 const port = process.env.PORT || 5000;
 const brokerPort = process.env.BROKER_PORT;
+const brokerHost = process.env.BROKER_HOST;
+const brokerUsername = process.env.BROKER_USERNAME;
+const brokerPassword = process.env.BROKER_PASSWORD;
 const URL = process.env.MONGO_URI;
 
 const app = express();
@@ -24,7 +27,6 @@ mongoose
   .catch((error) => {
     console.error("error! " + error);
   });
-
 
 app.get("/", function (req, res) {
   res.send("Hello from server");
@@ -47,32 +49,52 @@ app.listen(port, () => {
   console.log(`server start on port ${port}`);
 });
 
-// broker setup
-const aedes = require("aedes")();
-const server = require("net").createServer(aedes.handle);
+// mqtt client
+var mqtt = require("mqtt");
 
+var options = {
+  host: brokerHost,
+  port: brokerPort,
+  protocol: "mqtts",
+  username: brokerUsername,
+  password: brokerPassword,
+};
 
-server.listen(brokerPort, function () {
-  console.log(`MQTT Broker running on port: ${brokerPort}`);
+//initialize the MQTT client
+var client = mqtt.connect(options);
+
+//setup the callbacks
+client.on("connect", function () {
+  console.log("Connected to broker");
 });
 
-// emitted when a client publishes a message packet on the topic
-aedes.on("publish", async function (packet, client) {
-  if (client) {
-    const items = packet.topic.split("/");
-    if (items[0] == "car") {
-      const carCode = items[1];
-      const interface = items[2];
+client.on("error", function (error) {
+  console.log(error);
+});
 
-      switch (interface) {
-        case "speed":
-          publishCtrl.setSpeed(carCode, packet.payload.toString());
-          break;
-        case "location":
-          publishCtrl.setLocation(carCode, packet.payload.toString());
-        default:
-          break;
-      }
+// subscribe to topic 'car/#'
+client.subscribe("car/#");
+
+client.on("message", function (topic, message) {
+  //Called each time a message is received
+  console.log("Received message:", topic, message.toString());
+  if (topic.includes("car/")) {
+    const items = topic.split("/");
+
+    const carCode = items[1];
+    const interface = items[2];
+
+    switch (interface) {
+      case "speed":
+        publishCtrl.setSpeed(carCode, message.toString());
+        break;
+      case "location":
+        publishCtrl.setLocation(carCode, message.toString());
+      default:
+        break;
     }
   }
 });
+
+// TODO: publish message 'Hello' to topic 'my/test/topic'
+// client.publish('my/test/topic', 'Hello');
