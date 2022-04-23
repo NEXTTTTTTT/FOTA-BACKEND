@@ -76,7 +76,7 @@ const authCtrl = {
         maxAge: 24 * 30 * 60 * 60 * 1000, //30days
       });
 
-      res.json({
+      res.status(200).json({
         msg: "login sucess",
         access_token,
         user: {

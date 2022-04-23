@@ -10,12 +10,9 @@ const UserScheme = mongoose.Schema(
     deviceToken: { type: String },
     isActive: { type: Boolean, default: false },
     currentLocation: {
-      type: String,
-      required: {
-        function() {
-          return this.isActive;
-        },
-      },
+      type: Map,
+      of: String,
+      required:false
     },
   },
   { timestamps: true }
