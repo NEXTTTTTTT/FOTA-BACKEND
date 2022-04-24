@@ -77,10 +77,10 @@ const authCtrl = {
       });
 
       res.status(200).json({
-        status:0,
-        msg: "login sucess",
-        access_token : access_token,
-        user: {
+        "status":0,
+        "msg": "login sucess",
+        "access_token" : access_token,
+        "user": {
           ...user._doc,
           password: "",
         },
