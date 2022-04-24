@@ -77,7 +77,7 @@ const authCtrl = {
       });
 
       res.status(200).json({
-        status:200,
+        status:0,
         msg: "login sucess",
         access_token : access_token,
         user: {
