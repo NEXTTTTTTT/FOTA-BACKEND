@@ -13,7 +13,7 @@ const userCtrl = {
         .limit(10)
         .select("fullname username profileImage");
 
-      res.json({ users });
+      res.status(200).json({ users });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -24,7 +24,7 @@ const userCtrl = {
         "-password"
       );
       if (!user) return res.status(400).json({ msg: "No user Exists" });
-      res.json({ user });
+      res.status(200).json({ user });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -44,7 +44,7 @@ const userCtrl = {
         }
       );
 
-      res.json({ msg: "update success", user });
+      res.status(200).json({ msg: "update success", user });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
