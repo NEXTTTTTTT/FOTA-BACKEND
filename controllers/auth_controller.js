@@ -44,8 +44,9 @@ const authCtrl = {
       await newUser.save();
 
       res.status(200).json({
-        msg: "registerd sucess",
-        access_token,
+        "status":0,
+        "msg": "registerd sucess",
+        "access_token": access_token,
         user: {
           ...newUser._doc,
           password: "",
