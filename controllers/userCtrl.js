@@ -13,7 +13,7 @@ const userCtrl = {
         .limit(10)
         .select("fullname username profileImage");
 
-      res.status(200).json({ users });
+      res.status(200).json({"status":0,"msg":"success", "users":users });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -24,7 +24,7 @@ const userCtrl = {
         "-password"
       );
       if (!user) return res.status(400).json({ msg: "No user Exists" });
-      res.status(200).json({ user });
+      res.status(200).json({"status":0,"msg":"success","user": user });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -44,7 +44,7 @@ const userCtrl = {
         }
       );
 
-      res.status(200).json({ msg: "update success", user });
+      res.status(200).json({"status":0, msg: "update success","user": user });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -68,7 +68,7 @@ const userCtrl = {
         { _id: carId , admin : mongoose.Types.ObjectId(myId)},
         { $push: { users: mongoose.Types.ObjectId(userId) } }
       );
-      return res.status(200).json({ msg: "user added successfully and can control" });
+      return res.status(200).json({"status":0, "msg": "user added successfully and can control" });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -80,7 +80,7 @@ const userCtrl = {
         { _id: carId  ,admin:mongoose.Types.ObjectId(myId)},
         { $pullAll: { users:  mongoose.Types.ObjectId(userId) } }
       );
-      return res.status(200).json({ msg: "user removed successfully and can't control rignt now" });
+      return res.status(200).json({ "status":0,"msg": "user removed successfully and can't control rignt now" });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -92,7 +92,7 @@ const userCtrl = {
         { _id: carId },
         { $pullAll: { users:  mongoose.Types.ObjectId(myId) } }
       );
-      return res.status(200).json({ msg: "you removed successfully and can't control right now" });
+      return res.status(200).json({"status":0, "msg": "you removed successfully and can't control right now" });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -111,7 +111,7 @@ const userCtrl = {
         await car.save();
 
         const updatedCar = await Cars.findOne({_id :car._id}).populate("admin users","-password");
-        res.status(200).json({msg: "added successfully",updatedCar});
+        res.status(200).json({"status":0,"msg": "added successfully",updatedCar});
         
     } catch (err) {
       return res.status(500).json({ msg: err.message });
@@ -130,7 +130,7 @@ const userCtrl = {
         car.overwrite({ admin:null });
         await car.save();
 
-        res.status(200).json({msg: "car removed successfully"});
+        res.status(200).json({"status":0,"msg": "car removed successfully"});
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
