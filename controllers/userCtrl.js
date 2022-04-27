@@ -52,24 +52,15 @@ const userCtrl = {
   getCars: async (req, res) => {
     try {
       const id = req.params.id;
-      const myCars = await Cars.find({ admin: mongoose.Types.ObjectId(id) });
-      return res.status(200).json({ msg: "sucess", myCars });
+      const myCars = await Cars.find({ admin: mongoose.Types.ObjectId(id), users: mongoose.Types.ObjectId(id),});
+      return res.status(200).json({"status":0 ,msg: "sucess", "my_cars" 
+      : myCars, });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
   },
 
-  getSharedCars: async (req, res) => {
-    try {
-      const id = req.params.id;
-      const mySharedCars = await Cars.find({
-        users: mongoose.Types.ObjectId(id),
-      });
-      return res.status(200).json({ msg: "sucess", mySharedCars });
-    } catch (err) {
-      return res.status(500).json({ msg: err.message });
-    }
-  },
+
   shareCar: async (req, res) => {
     try {
       const {myId, userId, carId } = req.body;
