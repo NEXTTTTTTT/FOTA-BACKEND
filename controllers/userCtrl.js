@@ -52,7 +52,7 @@ const userCtrl = {
   getCars: async (req, res) => {
     try {
       const id = req.params.id;
-      const myCars = await Cars.find({ admin: mongoose.Types.ObjectId(id), users: mongoose.Types.ObjectId(id),});
+      const myCars = await Cars.find({ admin: mongoose.Types.ObjectId(id), users: mongoose.Types.ObjectId(id),}).populate('firmware users admin ');
       return res.status(200).json({"status":0 ,msg: "sucess", "my_cars" 
       : myCars, });
     } catch (err) {
