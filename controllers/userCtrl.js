@@ -107,10 +107,10 @@ const userCtrl = {
         const isMatch = await bcrypt.compare(password, car.password);
         if (!isMatch)
           return res.status(400).json({ msg: "User Passowrd is incorrect" });
-        car.overwrite({ admin: mongoose.Types.ObjectId(myId) });
-        await car.save();
+        // car.overwrite({ admin: mongoose.Types.ObjectId(myId) });
+        // await car.save();
 
-        const updatedCar = await Cars.findOne({_id :car._id}).populate("admin users","-password");
+        const updatedCar = await Cars.updateOne({code:code},{admin:mongoose.Types.ObjectId(myId)}).populate("admin users","-password");
         res.status(200).json({"status":0,"msg": "added successfully",updatedCar});
         
     } catch (err) {
