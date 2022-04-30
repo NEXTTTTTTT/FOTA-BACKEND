@@ -107,8 +107,6 @@ const userCtrl = {
         const isMatch = await bcrypt.compare(password, car.password);
         if (!isMatch)
           return res.status(400).json({ msg: "User Passowrd is incorrect" });
-        // car.overwrite({ admin: mongoose.Types.ObjectId(myId) });
-        // await car.save();
 
         await Cars.updateOne({code:code},{admin:mongoose.Types.ObjectId(myId)});
         const updatedCar = await Cars.findOne({code:code}).populate("admin users","-password");
@@ -124,12 +122,12 @@ const userCtrl = {
         const car = await Cars.findOne({ code });
 
         if (!car) return res.status(400).json({ msg: "Car does not exists" });
+        if(car.admin.toString() !== myId) return res.status(400).json({ msg: "You are not admin of this car" });
   
         const isMatch = await bcrypt.compare(password, car.password);
         if (!isMatch)
           return res.status(400).json({ msg: "User Passowrd is incorrect" });
-        car.overwrite({ admin:null });
-        await car.save();
+        await Cars.updateOne({code:code},{admin:null});
 
         res.status(200).json({"status":0,"msg": "car removed successfully"});
     } catch (err) {
