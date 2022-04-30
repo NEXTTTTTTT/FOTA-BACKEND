@@ -53,7 +53,7 @@ const userCtrl = {
     try {
       const id = req.params.id;
       console.log(id);
-      const myCars = await Cars.find({ admin:mongoose.ObjectId(id.toString), users: mongoose.ObjectId(id.toString),}).populate("firmware users admin", "-password");
+      const myCars = await Cars.find({$or:[{admin:mongoose.Types.ObjectId(id)},{users: mongoose.Types.ObjectId(id)}] }).populate("firmware users admin", "-password");
       return res.status(200).json({"status":0 ,msg: "sucess", "my_cars" 
       : myCars, });
     } catch (err) {
