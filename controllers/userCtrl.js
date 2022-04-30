@@ -110,8 +110,9 @@ const userCtrl = {
         // car.overwrite({ admin: mongoose.Types.ObjectId(myId) });
         // await car.save();
 
-        const updatedCar = await Cars.updateOne({code:code},{admin:mongoose.Types.ObjectId(myId)}).populate("admin users","-password");
-        res.status(200).json({"status":0,"msg": "added successfully",updatedCar});
+        await Cars.updateOne({code:code},{admin:mongoose.Types.ObjectId(myId)});
+        const updatedCar = await Cars.findOne({code:code}).populate("admin users","-password");
+        res.status(200).json({"status":0,"msg": "added successfully","car": updatedCar});
         
     } catch (err) {
       return res.status(500).json({ msg: err.message });
