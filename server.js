@@ -90,6 +90,10 @@ client.on("message", function (topic, message) {
         break;
       case "location":
         publishCtrl.setLocation(carCode, message.toString());
+      case "active":
+        publishCtrl.setActive(carCode,message.toString());
+      case "Fuel":
+        publishCtrl.setFuel(carCode,message.toString);
       default:
         break;
     }

@@ -17,6 +17,13 @@ const CarScheme = mongoose.Schema(
       min: [0, `the speed can't be less than zero`],
       default: 0,
     },
+    currentFuel: {
+      type: Number,
+      min: [0, `the fuel can't be less than zero`],
+      max:[100,`the fuel can't exceed 100%`],
+      default: 0,
+    },
+    
     firmware: {
       type: mongoose.Types.ObjectId,
       ref: "firmware",
