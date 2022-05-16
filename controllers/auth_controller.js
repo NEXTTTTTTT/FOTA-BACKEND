@@ -35,11 +35,11 @@ const authCtrl = {
       const access_token = createAccessToken({ id: newUser._id });
       const refresh_token = createRefreshToken({ id: newUser._id });
 
-      res.cookie("refreshtoken", refresh_token, {
-        httpOnly: true,
-        path: "/api/refresh_token",
-        maxAge: 24 * 30 * 60 * 60 * 1000, //30days
-      });
+      // res.cookie("refreshtoken", refresh_token, {
+      //   httpOnly: true,
+      //   path: "/api/refresh_token",
+      //   maxAge: 24 * 30 * 60 * 60 * 1000, //30days
+      // });
 
       await newUser.save();
 
@@ -47,6 +47,7 @@ const authCtrl = {
         "status":0,
         "msg": "registerd sucess",
         "access_token": access_token,
+        "refresh_token":refresh_token,
         user: {
           ...newUser._doc,
           password: "",
@@ -71,16 +72,17 @@ const authCtrl = {
       const access_token = createAccessToken({ id: user._id });
       const refresh_token = createRefreshToken({ id: user._id });
 
-      res.cookie("refreshtoken", refresh_token, {
-        httpOnly: true,
-        path: "/api/refresh_token",
-        maxAge: 24 * 30 * 60 * 60 * 1000, //30days
-      });
+      // res.cookie("refreshtoken", refresh_token, {
+      //   httpOnly: true,
+      //   path: "/api/refresh_token",
+      //   maxAge: 24 * 30 * 60 * 60 * 1000, //30days
+      // });
 
       res.status(200).json({
         "status":0,
         "msg": "login sucess",
         "access_token" : access_token,
+        "refresh_token":refresh_token,
         "user": {
           ...user._doc,
           password: "",
@@ -90,17 +92,17 @@ const authCtrl = {
       return res.status(500).json({ msg: err.message });
     }
   },
-  logout: async (req, res) => {
-    try {
-      res.clearCookie("refreshtoken", { path: "/api/refresh_token" });
-      res.status(200).json({"status":0, "msg": "Logged out" });
-    } catch (err) {
-      return res.status(500).json({ msg: err.message });
-    }
-  },
+  // logout: async (req, res) => {
+  //   try {
+  //     res.clearCookie("refreshtoken", { path: "/api/refresh_token" });
+  //     res.status(200).json({"status":0, "msg": "Logged out" });
+  //   } catch (err) {
+  //     return res.status(500).json({ msg: err.message });
+  //   }
+  // },
   generateAccessToken: async (req, res) => {
     try {
-      const rf_token = req.cookies.refreshtoken;
+      const rf_token = req.body.refreshtoken;
 
       if (!rf_token) return res.status(400).json({ msg: "please login now" });
 

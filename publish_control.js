@@ -18,7 +18,7 @@ const publishControl = {
             var value = JSON.parse(location);
             console.log(value);
             await Car.updateOne({code:car},{carLocation:value});
-            console.log(`location updated to latitude: ${value['latitude']} longitude: ${value['longitude']}`);
+            console.log(`location updated to latitude: ${value['lat']} longitude: ${value['lng']}`);
         } catch (error) {
             console.error(error.msg);
         }
