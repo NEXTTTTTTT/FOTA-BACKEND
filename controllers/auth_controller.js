@@ -110,7 +110,7 @@ const authCtrl = {
         rf_token,
         process.env.REFRESHTOKENSECRET,
         async (err, result) => {
-          if (err) return res.status(400).json({ msg: "Please login now" });
+          if (err) return res.status(401).json({ msg: err.message});
 
           const user = await Users.findById(result.id)
             .select("-password");
@@ -120,14 +120,14 @@ const authCtrl = {
 
           const access_token = createAccessToken({ id: result.id });
 
-          res.status(200).json({
+          res.status(201).json({
             access_token,
             user,
           });
         }
       );
     } catch (err) {
-      return res.status(500).json({ msg: err.message });
+      return res.status(401).json({ msg: err.message });
     }
   },
 };
