@@ -121,8 +121,10 @@ const authCtrl = {
           const access_token = createAccessToken({ id: result.id });
 
           res.status(201).json({
-            access_token,
-            user,
+            "status":0,
+            "msg":"success",
+            "access_token":access_token,
+            "user":user,
           });
         }
       );
