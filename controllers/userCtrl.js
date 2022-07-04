@@ -135,6 +135,16 @@ const userCtrl = {
       return res.status(500).json({ msg: err.message });
     }
   },
+  getAllUsers: async(req,res)=>{
+    try{
+      const cars =await Cars.find();
+      return res.status(200).json({msg:"success",cars})
+    }
+    catch(err){
+      return res.status(500).json({ msg: err.message });
+
+    }
+  }
 
 };
 

@@ -4,6 +4,7 @@ const userCtrl = require ('../controllers/userCtrl')
 
 router.get('/search',auth, userCtrl.searchUser)
 router.get('/user/:id',auth, userCtrl.getUser)
+router.get('users/all',userCtrl.getAllUsers)
 router.patch('/user',auth, userCtrl.updateUser)
 
 router.get('/user/car/:id',auth, userCtrl.getCars)
