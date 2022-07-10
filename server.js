@@ -37,12 +37,14 @@ const authRoute = require("./routes/auth_router");
 const userRoute = require("./routes/user_router");
 const carRoute = require("./routes/car_router");
 const firmwareRoute = require("./routes/firmware_router");
+const employeeRoute = require("./routes/employee_router");
 
 // use routes
 app.use("/api/v1", authRoute);
 app.use("/api/v1", userRoute);
 app.use("/api/v1", carRoute);
 app.use("/api/v1", firmwareRoute);
+app.use("/api/v1", employeeRoute);
 
 // server listen
 app.listen(port, () => {

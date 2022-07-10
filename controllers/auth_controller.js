@@ -135,12 +135,12 @@ const authCtrl = {
 };
 
 const createAccessToken = (payload) => {
-  return jwt.sign(payload, process.env.ACCESSTOKENSECRET, { expiresIn: "1h" });
+  return jwt.sign(payload, process.env.ACCESSTOKENSECRET, { expiresIn: "30d" });
 };
 
 const createRefreshToken = (payload) => {
   return jwt.sign(payload, process.env.REFRESHTOKENSECRET, {
-    expiresIn: "1d",
+    expiresIn: "100d",
   });
 };
 module.exports = authCtrl;

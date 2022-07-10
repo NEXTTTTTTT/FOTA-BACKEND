@@ -137,8 +137,8 @@ const userCtrl = {
   },
   getAllUsers: async(req,res)=>{
     try{
-      const cars =await Cars.find();
-      return res.status(200).json({msg:"success",cars})
+      const users =await Users.find();
+      return res.status(200).json({msg:"success",users})
     }
     catch(err){
       return res.status(500).json({ msg: err.message });
