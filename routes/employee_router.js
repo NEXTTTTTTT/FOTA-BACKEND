@@ -9,7 +9,7 @@ const employeeAuth = require('../middlewares/employee_auth')
 
 
 router.get("/employee/all",employeeAuth, employeeController.getEmployees);
-router.post("/employee/create",employeeAuth,employeeController.createEmployee);
+router.post("/employee/create",employeeController.createEmployee);
 router.delete("/employee/delete/",employeeAuth,employeeController.deleteEmployee);
 router.post("/employee/login/",employeeAuth,employeeAuthController.login);
 
