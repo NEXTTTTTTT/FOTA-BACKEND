@@ -1,10 +1,12 @@
 const router = require('express').Router();
 const auth = require('../middlewares/auth');
+const employeeAuth = require('../middlewares/employee_auth')
+
 const userCtrl = require ('../controllers/userCtrl')
 
 router.get('/search',auth, userCtrl.searchUser)
 router.get('/user/:id',auth, userCtrl.getUser)
-router.get('users/all',userCtrl.getAllUsers)
+router.get('users/all',employeeAuth,userCtrl.getAllUsers)
 router.patch('/user',auth, userCtrl.updateUser)
 
 router.get('/user/car/:id',auth, userCtrl.getCars)
