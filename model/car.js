@@ -28,10 +28,23 @@ const CarScheme = mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: "firmware",
     },
+
     createdBy: {
       type: String,
       default: "Adminstrator",
     },
+    isMotorOn:{
+      type:Boolean,default:false
+    },
+    isDoorLocked:{
+      type:Boolean,default:true
+    },
+    isAcOn:{
+      type:Boolean,default:false
+    },
+    isBagOn:{
+      type:Boolean,default:false
+    }
   },
   {
     timestamps: true,

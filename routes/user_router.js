@@ -6,17 +6,20 @@ const userCtrl = require ('../controllers/userCtrl')
 
 router.get('/search',auth, userCtrl.searchUser)
 router.get('/user/:id',auth, userCtrl.getUser)
-router.get('users/all',employeeAuth,userCtrl.getAllUsers)
+
 router.patch('/user',auth, userCtrl.updateUser)
 
-router.get('/user/car/:id',auth, userCtrl.getCars)
+router.get('/user/car/',auth, userCtrl.getCars)
 
-router.patch('/user/addCar',auth,userCtrl.addCar)
-router.patch('/user/removeCar',auth,userCtrl.removeCar)
+router.patch('/car/connect',auth,userCtrl.connectCar)
+router.patch('/car/disconnect',auth,userCtrl.disconnectCar)
 
-router.patch('/user/shareCar/',auth,userCtrl.shareCar)
-router.patch('/user/unShareCar/',auth,userCtrl.unShareCar)
-router.patch('/user/removeSharedCar/',auth,userCtrl.removeSharedCar)
+router.patch('/car/share',auth,userCtrl.shareCar)
+router.patch('/car/user/remove',auth,userCtrl.removeUserAwayMyCar)
 
+router.patch('/car/unshare',auth,userCtrl.unshareCar)
+
+//* web app
+router.get('users/all',employeeAuth,userCtrl.getAllUsers)
 
 module.exports = router;

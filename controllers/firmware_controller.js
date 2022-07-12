@@ -38,6 +38,14 @@ const firmwareCtrl = {
       return res.status(500).json({msg:err.message});
     }
   },
+  getAllFirmwares: async(req,res)=>{
+    try {
+      const firmwares =await  Firmeware.find();
+      return res.status(200).json({msg:"success",firmwares:firmwares});
+    } catch (err) {
+      return res.status(500).json({msg:err.message});
+    }
+  },
   deleteFirmware: async(req,res)=>{
     try {
       const {id} = req.body;
