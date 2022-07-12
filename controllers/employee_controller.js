@@ -1,6 +1,7 @@
 const Employee = require("../model/employee");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const employee = require("../model/employee");
 
 const employeeCtrl = {
   createEmployee :async(req,res)=>{
@@ -8,8 +9,8 @@ const employeeCtrl = {
       const {fullname,username, password}= req.body;
       const newUsername = username.toLowerCase().replace(/ /g, "");
 
-      const employee = await Employee.findOne({ username: newUsername });
-      if (employee)
+      const employee2 = await Employee.findOne({ username: newUsername });
+      if (employee2)
         return res.status(400).json({ msg: "this employee already exists" });
 
       if (password.length < 6)
@@ -23,7 +24,7 @@ const employeeCtrl = {
         fullname:fullname,
         username: newUsername,
         password: passwordHash,
-        createdBy
+        createdBy:employee._id
       });
 
       await newEmployee.save();
