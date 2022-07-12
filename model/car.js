@@ -30,8 +30,8 @@ const CarScheme = mongoose.Schema(
     },
 
     createdBy: {
-      type: String,
-      default: "Adminstrator",
+      type: mongoose.Types.ObjectId,
+      ref: "employee",
     },
     isMotorOn:{
       type:Boolean,default:false

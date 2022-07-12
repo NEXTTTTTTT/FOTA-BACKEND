@@ -1,14 +1,15 @@
+const employee = require("../model/employee");
 const Firmeware = require("../model/firmware");
 
 const firmwareCtrl = {
   createFirmware :async(req,res)=>{
     try {
-      const {versionName,description,file,createdBy}= req.body;
+      const {versionName,description,file}= req.body;
     const firmware = new Firmeware({
         versionName:versionName,
         description: description,
         file: file,
-        createdBy:createdBy
+        createdBy:employee._id
       });
 
       await firmware.save();

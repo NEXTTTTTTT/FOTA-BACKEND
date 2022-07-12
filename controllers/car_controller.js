@@ -1,6 +1,7 @@
 const Cars = require("../model/car");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const employee = require("../model/employee");
 
 const carCtrl = {
   createCar :async(req,res)=>{
@@ -23,7 +24,7 @@ const carCtrl = {
         firmware:mongoose.Types.ObjectId(firmware),
         code: newCarCode,
         password: passwordHash,
-        createdBy:createdBy
+        createdBy:employee.id
       });
 
       await newCar.save();
@@ -47,6 +48,18 @@ const carCtrl = {
       return res.status(200).json({msg:"success",cars})
     } catch (err) {
       return res.status(500).json({msg:err.message});
+    }
+  },
+  searchCar: async(req,res)=>{
+    try {
+      const {code} = req.body.code;
+      const car = await Cars.find({
+        code: code ,
+      });
+
+      res.status(200).json({ status: 0, msg: "success", car: car });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
     }
   },
   deleteCar: async(req,res)=>{

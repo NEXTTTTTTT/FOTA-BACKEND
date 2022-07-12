@@ -11,7 +11,7 @@ router.get("/firmware/all",employeeAuth,firmwareController.getAllFirmwares);
 
 router.get("/latest/firmware",firmwareController.getLatestFirmware);
 
-router.post("/firmware/create",firmwareController.createFirmware);
+router.post("/firmware/create",employeeAuth,firmwareController.createFirmware);
 router.delete("/firmware/delete/",firmwareController.deleteFirmware);
 
 

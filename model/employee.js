@@ -6,6 +6,10 @@ const EmployeeScheme = mongoose.Schema(
     username: { type: String, required: true,trim:true,unique:true ,maxlength:25,},
     password: { type: String, required: true },
     profileImage: { type: String, default: "" },
+    createdBy: {
+      type: mongoose.Types.ObjectId,
+      ref: "employee",
+    },
   },
   { timestamps: true }
 );

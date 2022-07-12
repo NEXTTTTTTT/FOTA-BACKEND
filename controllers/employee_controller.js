@@ -23,6 +23,7 @@ const employeeCtrl = {
         fullname:fullname,
         username: newUsername,
         password: passwordHash,
+        createdBy
       });
 
       await newEmployee.save();
