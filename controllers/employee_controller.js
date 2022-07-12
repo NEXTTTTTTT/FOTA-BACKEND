@@ -24,7 +24,7 @@ const employeeCtrl = {
         fullname:fullname,
         username: newUsername,
         password: passwordHash,
-        createdBy:employee._id
+        // createdBy:employee._id
       });
 
       await newEmployee.save();
