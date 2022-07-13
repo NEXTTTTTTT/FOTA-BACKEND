@@ -150,7 +150,7 @@ const userCtrl = {
       const cars = Cars.find({
         $or:{
           admin:mongoose.Types.ObjectId(req.user._id),
-          users:[mongoose.Types.ObjectId(req.user._id)]
+          users:mongoose.Types.ObjectId(req.user._id)
         }
       }).populate(
         "admin users",
