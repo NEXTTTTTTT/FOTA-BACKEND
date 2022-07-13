@@ -71,9 +71,19 @@ const userCtrl = {
         { _id: carId, admin: mongoose.Types.ObjectId(req.user._id) },
         { $push: { users: mongoose.Types.ObjectId(userId) } }
       );
+      const cars = Cars.find({
+        $or:{
+          admin:req.user._id,
+          users:[req.user._id]
+        }
+      }).populate(
+        "admin users",
+        "-password"
+      );
       return res
         .status(200)
-        .json({ status: 0, msg: "user added successfully and can control" });
+        .json({ status: 0, msg: "user added successfully and can control", my_cars: cars });
+      
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -85,12 +95,19 @@ const userCtrl = {
         { _id: carId, admin: mongoose.Types.ObjectId(req.user._id) },
         { $pullAll: { users: mongoose.Types.ObjectId(userId) } }
       );
+      const cars = Cars.find({
+        $or:{
+          admin:req.user._id,
+          users:[req.user._id]
+        }
+      }).populate(
+        "admin users",
+        "-password"
+      );
       return res
         .status(200)
-        .json({
-          status: 0,
-          msg: "user removed successfully and can't control rignt now",
-        });
+        .json({ status: 0, msg: "user removed successfully and can't control rignt now", my_cars: cars });
+      
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -99,19 +116,26 @@ const userCtrl = {
     try {
       const { carId } = req.body;
       await Cars.updateOne({ _id: carId }, { $pullAll: { users: req.user._id } });
+      const cars = Cars.find({
+        $or:{
+          admin:req.user._id,
+          users:[req.user._id]
+        }
+      }).populate(
+        "admin users",
+        "-password"
+      );
       return res
         .status(200)
-        .json({
-          status: 0,
-          msg: "you removed successfully and can't control right now",
-        });
+        .json({ status: 0, msg: "you removed successfully and can't control right now", my_cars: cars });
+     
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
   },
   connectCar: async (req, res) => {
     try {
-      const { code, password } = req.body;
+      const { code, password ,carType} = req.body;
       const car = await Cars.findOne({ code });
 
       if (!car) return res.status(400).json({ msg: "Car does not exists" });
@@ -120,14 +144,21 @@ const userCtrl = {
       if (!isMatch)
         return res.status(400).json({ msg: "User Passowrd is incorrect" });
 
-      await Cars.updateOne({ code: code }, { admin: req.user._id });
-      const updatedCar = await Cars.findOne({ code: code }).populate(
+      if(car.admin === req.user._id) return res.status(400).json({msg:"Already admin"})
+
+      await Cars.updateOne({ code: code }, { admin: req.user._id ,carType:carType});
+      const cars = Cars.find({
+        $or:{
+          admin:req.user._id,
+          users:[req.user._id]
+        }
+      }).populate(
         "admin users",
         "-password"
       );
-      res
+      return res
         .status(200)
-        .json({ status: 0, msg: "added successfully", car: updatedCar });
+        .json({ status: 0, msg: "added successfully", my_cars: cars });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -145,8 +176,19 @@ const userCtrl = {
       if (!isMatch)
         return res.status(400).json({ msg: "User Passowrd is incorrect" });
       await Cars.updateOne({ code: code }, { admin: null });
+      const cars = Cars.find({
+        $or:{
+          admin:req.user._id,
+          users:[req.user._id]
+        }
+      }).populate(
+        "admin users",
+        "-password"
+      );
+      return res
+        .status(200)
+        .json({ status: 0, msg: "removed successfully", my_cars: cars });
 
-      res.status(200).json({ status: 0, msg: "car removed successfully" });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
