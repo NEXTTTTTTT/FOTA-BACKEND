@@ -3,8 +3,8 @@ const Cars = require("../model/car");
 
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const user = require("../model/user");
-const user = require("../model/user");
+
+
 
 const userCtrl = {
   searchUser: async (req, res) => {
