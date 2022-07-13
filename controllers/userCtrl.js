@@ -4,12 +4,13 @@ const Cars = require("../model/car");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const user = require("../model/user");
+const user = require("../model/user");
 
 const userCtrl = {
   searchUser: async (req, res) => {
     try {
       const users = await Users.find({
-        username: { $regex: req.query.username },
+        username: { $regex: req.body.username },
       })
         .limit(10)
         .select("fullname username profileImage");
@@ -21,10 +22,6 @@ const userCtrl = {
   },
   getUser: async (req, res) => {
     try {
-      const user = await Users.findOne({ _id: req.params.id }).select(
-        "-password"
-      );
-      if (!user) return res.status(400).json({ msg: "No user Exists" });
       res.status(200).json({ status: 0, msg: "success", user: user });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
@@ -51,7 +48,7 @@ const userCtrl = {
   },
   getCars: async (req, res) => {
     try {
-      const id = req.params.id;
+      const id = user._id;
       console.log(id);
       const myCars = await Cars.find({
         $or: [
