@@ -22,7 +22,7 @@ const userCtrl = {
   },
   getUser: async (req, res) => {
     try {
-      res.status(200).json({ status: 0, msg: "success", user: user });
+      res.status(200).json({ status: 0, msg: "success", user: req.user });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -34,7 +34,7 @@ const userCtrl = {
         return res.status(500).json({ msg: "Fullname is requires" });
 
       const newUser = await Users.findOneAndUpdate(
-        { _id: user._id },
+        { _id: req.user._id },
         {
           fullname,
           profileImage,
@@ -48,7 +48,7 @@ const userCtrl = {
   },
   getCars: async (req, res) => {
     try {
-      const id = user._id;
+      const id = req.user._id;
       console.log(id);
       const myCars = await Cars.find({
         $or: [
@@ -68,7 +68,7 @@ const userCtrl = {
     try {
       const { userId, carId } = req.body;
       await Cars.updateOne(
-        { _id: carId, admin: mongoose.Types.ObjectId(user._id) },
+        { _id: carId, admin: mongoose.Types.ObjectId(req.user._id) },
         { $push: { users: mongoose.Types.ObjectId(userId) } }
       );
       return res
@@ -82,7 +82,7 @@ const userCtrl = {
     try {
       const { userId, carId } = req.body;
       await Cars.updateOne(
-        { _id: carId, admin: mongoose.Types.ObjectId(user._id) },
+        { _id: carId, admin: mongoose.Types.ObjectId(req.user._id) },
         { $pullAll: { users: mongoose.Types.ObjectId(userId) } }
       );
       return res
@@ -98,7 +98,7 @@ const userCtrl = {
   unshareCar: async (req, res) => {
     try {
       const { carId } = req.body;
-      await Cars.updateOne({ _id: carId }, { $pullAll: { users: user._id } });
+      await Cars.updateOne({ _id: carId }, { $pullAll: { users: req.user._id } });
       return res
         .status(200)
         .json({
@@ -120,7 +120,7 @@ const userCtrl = {
       if (!isMatch)
         return res.status(400).json({ msg: "User Passowrd is incorrect" });
 
-      await Cars.updateOne({ code: code }, { admin: user._id });
+      await Cars.updateOne({ code: code }, { admin: req.user._id });
       const updatedCar = await Cars.findOne({ code: code }).populate(
         "admin users",
         "-password"
@@ -138,7 +138,7 @@ const userCtrl = {
       const car = await Cars.findOne({ code });
 
       if (!car) return res.status(400).json({ msg: "Car does not exists" });
-      if (car.admin.toString() !== user._id)
+      if (car.admin.toString() !== req.user._id)
         return res.status(400).json({ msg: "You are not admin of this car" });
 
       const isMatch = await bcrypt.compare(password, car.password);
@@ -151,6 +151,8 @@ const userCtrl = {
       return res.status(500).json({ msg: err.message });
     }
   },
+
+  //* web app 
   getAllUsers: async (req, res) => {
     try {
       const users = await Users.find();
