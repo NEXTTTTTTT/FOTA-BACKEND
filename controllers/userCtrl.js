@@ -144,13 +144,13 @@ const userCtrl = {
       if (!isMatch)
         return res.status(400).json({ msg: "User Passowrd is incorrect" });
 
-      if(car.admin == req.user._id) return res.status(400).json({msg:"Already admin"})
+      if(car.admin == mongoose.Types.ObjectId(req.user._id)) return res.status(400).json({msg:"Already admin"})
 
-      await Cars.updateOne({ code: code }, { admin: req.user._id ,carType:carType});
+      await Cars.updateOne({ code: code }, { admin: mongoose.Types.ObjectId(req.user._id) ,carType:carType});
       const cars = Cars.find({
         $or:{
-          admin:req.user._id,
-          users:[req.user._id]
+          admin:mongoose.Types.ObjectId(req.user._id),
+          users:[mongoose.Types.ObjectId(req.user._id)]
         }
       }).populate(
         "admin users",
