@@ -52,7 +52,7 @@ const userCtrl = {
           { admin: mongoose.Types.ObjectId(id) },
           { users: mongoose.Types.ObjectId(id) },
         ],
-      }).populate("firmware users admin", "-password");
+      }).populate("users admin", "-password");
       return res
         .status(200)
         .json({ status: 0, msg: "sucess", my_cars: myCars });
