@@ -108,7 +108,7 @@ const userCtrl = {
       const { carId } = req.body;
       await Cars.updateOne(
         { _id: carId },
-        { $pullAll: { users: req.user._id } }
+        { $pullAll: { users: [req.user._id] } }
       );
       const id = req.user._id;
       const myCars = await Cars.find({
