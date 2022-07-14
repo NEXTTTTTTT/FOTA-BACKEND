@@ -63,9 +63,9 @@ const userCtrl = {
 
   shareCar: async (req, res) => {
     try {
-      const { userId, carId } = req.body;
+      const { userId, code } = req.body;
       await Cars.updateOne(
-        { _id: carId, admin: mongoose.Types.ObjectId(req.user._id) },
+        { code: code, admin: mongoose.Types.ObjectId(req.user._id) },
         { $push: { users: mongoose.Types.ObjectId(userId) } }
       );
       const id = req.user._id;
@@ -84,9 +84,9 @@ const userCtrl = {
   },
   removeUserAwayMyCar: async (req, res) => {
     try {
-      const { userId, carId } = req.body;
+      const { userId, code } = req.body;
       await Cars.updateOne(
-        { _id: carId, admin: req.user._id },
+        { code: code, admin: req.user._id },
         { $pullAll: { users: [userId]} }
       );
       const id = req.user._id;
@@ -105,9 +105,9 @@ const userCtrl = {
   },
   unshareCar: async (req, res) => {
     try {
-      const { carId } = req.body;
+      const { code } = req.body;
       await Cars.updateOne(
-        { _id: carId },
+        { code: code },
         { $pullAll: { users: [req.user._id] } }
       );
       const id = req.user._id;
