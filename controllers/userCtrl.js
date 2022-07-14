@@ -8,7 +8,7 @@ const userCtrl = {
   searchUser: async (req, res) => {
     try {
       const users = await Users.find({
-        username: { $regex: req.body.username },
+        username: { $regex: req.query.username },
       })
         .limit(10)
         .select("fullname username profileImage");
