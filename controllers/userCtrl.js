@@ -7,7 +7,7 @@ const bcrypt = require("bcrypt");
 const userCtrl = {
   searchUser: async (req, res) => {
     try {
-      const car = await  Cars.findOne({code:req.body.code});
+      const car = await  Cars.findOne({code:req.query.code});
       const carUsers = car.users.map(user => user._id);
       carUsers.push(car.admin);
 
