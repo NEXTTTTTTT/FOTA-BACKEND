@@ -7,8 +7,13 @@ const bcrypt = require("bcrypt");
 const userCtrl = {
   searchUser: async (req, res) => {
     try {
+      const car = await  Cars.findOne({code:req.body.code});
+      const carUsers = car.users.map(user => user._id);
+      carUsers.push(car.admin);
+
       const users = await Users.find({
         username: { $regex: req.query.username },
+        _id: { $nin: carUsers }
       })
         .limit(10)
         .select("fullname username profileImage");
