@@ -7,12 +7,12 @@ const firmwareController = require('../controllers/firmware_controller');
 const employeeAuth = require('../middlewares/employee_auth')
 
 router.get("/firmware/:version",firmwareController.getFirmware);
-router.get("/firmware/all",employeeAuth,firmwareController.getAllFirmwares);
+router.get("/firmwares",employeeAuth,firmwareController.getAllFirmwares);
 
 router.get("/latest/firmware",firmwareController.getLatestFirmware);
 
 router.post("/firmware/create",employeeAuth,firmwareController.createFirmware);
-router.delete("/firmware/delete/",firmwareController.deleteFirmware);
+router.delete("/firmware/delete/",employeeAuth,firmwareController.deleteFirmware);
 
 
 module.exports = router

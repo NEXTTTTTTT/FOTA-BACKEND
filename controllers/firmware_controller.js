@@ -42,12 +42,13 @@ const firmwareCtrl = {
   getAllFirmwares: async(req,res)=>{
     try {
       const firmwares =await  Firmeware.find();
-      return res.status(200).json({msg:"success",firmwares:firmwares});
+      return res.status(200).json({msg:"success getting firmwares",firmwares});
     } catch (err) {
       return res.status(500).json({msg:err.message});
     }
   },
   deleteFirmware: async(req,res)=>{
+
     try {
       const {id} = req.body;
       await Firmeware.deleteOne({_id:id});
