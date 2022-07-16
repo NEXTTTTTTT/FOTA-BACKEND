@@ -10,6 +10,7 @@ const CarScheme = mongoose.Schema(
       type: Map,of: String
     },
     admin: { type: mongoose.Types.ObjectId, ref: "user" },
+    currentUser: { type: mongoose.Types.ObjectId, ref: "user" },
     users: [{ type: mongoose.Types.ObjectId, ref: "user" }],
     defaultSpeed: { type: Number, default: 120 },
     currentSpeed: {

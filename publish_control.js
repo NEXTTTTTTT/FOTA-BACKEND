@@ -12,7 +12,7 @@ const publishControl = {
         }
         
     },
-    setActive: async(car,active)=>{
+    setMotor: async(car,active)=>{
         try {
             var map = JSON.parse(active);
             var value = map.active;
@@ -23,17 +23,7 @@ const publishControl = {
         }
         
     },
-    setFuel: async(car,fuel)=>{
-        try {
-            var map = JSON.parse(fuel);
-            const value = map.fuel;
-            await Car.updateOne({code:car},{currentFuel:value});
-            console.log(`fuel updated to ${value}`);
-        } catch (error) {
-            console.error(error.msg);
-        }
-        
-    },
+   
     setLocation: async(car,location)=>{
         try {
             console.log(location);

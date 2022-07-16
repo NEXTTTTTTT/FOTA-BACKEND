@@ -38,6 +38,7 @@ const userRoute = require("./routes/user_router");
 const carRoute = require("./routes/car_router");
 const firmwareRoute = require("./routes/firmware_router");
 const employeeRoute = require("./routes/employee_router");
+const notifyRoute = require("./routes/notify_router");
 
 // use routes
 app.use("/api/v1", authRoute);
@@ -45,6 +46,7 @@ app.use("/api/v1", userRoute);
 app.use("/api/v1", carRoute);
 app.use("/api/v1", firmwareRoute);
 app.use("/api/v1", employeeRoute);
+app.use("/api/v1", notifyRoute);
 
 // server listen
 app.listen(port, () => {
@@ -80,9 +82,9 @@ client.subscribe("car/#");
 client.on("message", function (topic, message) {
   //Called each time a message is received
   console.log("Received message:", topic, message.toString());
-  if (topic.includes("car/")) {
+  
     const items = topic.split("/");
-
+    const userId = items[0];
     const carCode = items[1];
     const interface = items[2];
 
@@ -90,16 +92,15 @@ client.on("message", function (topic, message) {
       case "speed":
         publishCtrl.setSpeed(carCode, message.toString());
         break;
-      case "location":
+      case "gps":
         publishCtrl.setLocation(carCode, message.toString());
-      case "active":
-        publishCtrl.setActive(carCode,message.toString());
-      case "Fuel":
-        publishCtrl.setFuel(carCode,message.toString);
+      case "motor":
+        publishCtrl.setMotor(carCode,message.toString());
+     
       default:
         break;
     }
-  }
+  
 });
 
 // TODO: publish message 'Hello' to topic 'my/test/topic'

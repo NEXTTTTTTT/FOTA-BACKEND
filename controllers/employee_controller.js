@@ -78,7 +78,7 @@ const employeeCtrl = {
   deleteEmployee: async(req,res)=>{
     try {
       const {username} = req.body;
-      await Cars.deleteOne({username:username});
+      await Employee.deleteOne({username:username});
       res.status(200).json({msg:"employee deleted successfully"})
 
     } catch (err) {
