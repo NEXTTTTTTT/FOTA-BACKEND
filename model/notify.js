@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const NotifyScheme = mongoose.Schema(
   {
-    text:{type:String },
+    action:{type:String },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
     sender: {type:mongoose.Schema.Types.ObjectId,ref:"user"},
     isRead: { type: Boolean, default: false },

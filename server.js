@@ -82,26 +82,38 @@ client.subscribe("car/#");
 client.on("message", function (topic, message) {
   //Called each time a message is received
   console.log("Received message:", topic, message.toString());
-  
-    const items = topic.split("/");
-    const userId = items[0];
-    const carCode = items[1];
-    const interface = items[2];
 
-    switch (interface) {
-      case "speed":
-        publishCtrl.setSpeed(carCode, message.toString());
-        break;
-      case "gps":
-        publishCtrl.setLocation(carCode, message.toString());
-      case "motor":
-        publishCtrl.setMotor(carCode,message.toString());
-     
-      default:
-        break;
-    }
-  
+  const topicPath = topic.split("/");
+  const source = topicPath[0]; // if you wanna check who sent message
+  const carCode = topicPath[1];
+  const interface = topicPath[2];
+
+  switch (interface) {
+    case "speed":
+      publishCtrl.setSpeed(carCode, message.toString(),source);
+      break;
+    case "gps":
+      publishCtrl.setLocation(carCode, message.toString(),source);
+      break;
+    case "temp":
+      publishCtrl.setTemperature(carCode, message.toString(),source);
+      break;
+    case "motor":
+      publishCtrl.setMotor(carCode, message.toString(),source);
+      break;
+    case "lock":
+      publishCtrl.setLock(carCode, message.toString(),source);
+      break;
+    case "ac":
+      publishCtrl.setAC(carCode, message.toString(),source);
+      break;
+    case "bag":
+      publishCtrl.setBag(carCode, message.toString(),source);
+      break;
+
+    default:
+      break;
+  }
 });
 
-// TODO: publish message 'Hello' to topic 'my/test/topic'
-// client.publish('my/test/topic', 'Hello');
+
