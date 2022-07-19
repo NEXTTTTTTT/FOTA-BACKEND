@@ -2,11 +2,10 @@ const { default: mongoose } = require("mongoose");
 
 const CarScheme = mongoose.Schema(
   {
-    temp:{type:Number,default:0},
+    temperature:{type:Number,default:0},
     code: { type: String, required: true, trim: true, unique: true },
     password: { type: String, required: true },
     carType: { type: String },
-    isActive: { type: Boolean, default: false },
     carLocation: {
       type: String
     },
