@@ -56,13 +56,21 @@ app.listen(port, () => {
 // mqtt client
 var mqtt = require("mqtt");
 
+//* for secure broker
+// var options = {
+//   host: brokerHost,
+//   port: brokerPort,
+//   protocol: "mqtts",
+//   username: brokerUsername,
+//   password: brokerPassword,
+// };
+
 var options = {
-  host: brokerHost,
-  port: brokerPort,
-  protocol: "mqtts",
-  username: brokerUsername,
-  password: brokerPassword,
+  host: 'broker.emqx.io',
+  port: 1883,
+  protocol: "mqtt",
 };
+
 
 //initialize the MQTT client
 var client = mqtt.connect(options);
