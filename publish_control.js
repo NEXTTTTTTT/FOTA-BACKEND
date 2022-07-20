@@ -9,7 +9,27 @@ var serverKey = require("./fota-4a39d-firebase-adminsdk-fxeah-c6500c64c9.json");
 
 var fcm = new FCM(serverKey);
 
-const sendNotification = (token, title, body) => {
+
+const getBoolFromString = (stringValue) => {
+  switch(stringValue?.toLowerCase()?.trim()){
+      case "true": 
+      case "yes": 
+      case "1": 
+        return true;
+
+      case "false": 
+      case "no": 
+      case "0": 
+      case null: 
+      case undefined:
+        return false;
+
+      default: 
+        return JSON.parse(stringValue);
+  }
+}
+
+const sendNotification = async(token, title, body) => {
   var message = {
     //this may vary according to the message type (single recipient, multicast, topic, et cetera)
     to: token,
@@ -34,7 +54,7 @@ const publishControl = {
   setTemperature: async (carCode, temp, source) => {
     try {
       
-      await Car.updateOne({ code: carCode }, { temp: temp });
+      await Car.updateOne({ code: carCode }, { temp: parseInt(temp) });
       console.log(`temperatue updated to ${temp}`);
     } catch (error) {
       console.error(error.msg);
@@ -45,15 +65,15 @@ const publishControl = {
       
       const car = await Car.updateOne(
         { code: carCode },
-        { currentSpeed: speed }
+        { currentSpeed: parseInt(speed) }
       );
       console.log(`speed updated to ${speed}`);
 
-      if (speed > car.defaultSpeed) {
+      if (parseInt(speed) >= car.defaultSpeed) {
+        console.log(`speed notify`);
         //* send notify to admin "ahmed driving your car too fast"
         const notify = new Notify({
           action: "speed",
-          sender: car.currentUser, // todo
           user: car.admin,
           car: car._id,
         });
@@ -67,7 +87,7 @@ const publishControl = {
             " " +
             car.code +
             " is on " +
-            car.currentSpeed.toString() +
+            speed +
             " KM/H"
         );
       }
@@ -84,16 +104,19 @@ const publishControl = {
       console.error(error.msg);
     }
   },
+
+
+  // controllers 
   setMotor: async (carCode, motor, source) => {
     try {
       
-      const car = await Car.updateOne({ code: carCode }, { isMotorOn: motor });
+      const car = await Car.updateOne({ code: carCode }, { isMotorOn: getBoolFromString(motor) });
       console.log(`car motor is ${motor}`);
-      if (motor == true) {
+      if (getBoolFromString(motor) == true) {
         //* send notify to admin "ahmed taking your car"
         const notify = new Notify({
           action: "motor",
-          sender: mongoose.Schema.Types.ObjectId(source),
+          sender: mongoose.Types.ObjectId(source),
           user: car.admin,
           car: car._id,
         });
@@ -117,15 +140,15 @@ const publishControl = {
       
       const car = await Car.updateOne(
         { code: carCode },
-        { isDoorLocked: lock }
+        { isDoorLocked: getBoolFromString(lock) }
       );
       console.log(`car lock is ${lock}`);
-      if (lock == 'false') {
-        console.log("hey lock")
+      if (getBoolFromString(lock) == false) {
+        console.log("hey lock") //todo: test
         //* send notify to admin "ahmed lock off your car doors"
         const notify = new Notify({
           action: "lock",
-          sender: mongoose.Schema.Types.ObjectId(source),
+          sender: mongoose.Types.ObjectId(source),
           user: car.admin,
           car: car._id,
         });
@@ -138,7 +161,7 @@ const publishControl = {
           car.brand +
             " " +
             car.code +
-            " doors is open"
+            " lock is open"
         );
       }
     } catch (error) {
@@ -148,7 +171,7 @@ const publishControl = {
   setAC: async (carCode, ac, source) => {
     try {
       
-      const car = await Car.updateOne({ code: carCode }, { isAcOn: ac });
+      await Car.updateOne({ code: carCode }, { isAcOn: ac });
       console.log(`car ac is ${ac}`);
       
     } catch (error) {
@@ -158,13 +181,13 @@ const publishControl = {
   setBag: async (carCode, bag, source) => {
     try {
       
-      const car = await Car.updateOne({ code: carCode }, { isBagOn: bag });
+      const car = await Car.updateOne({ code: carCode }, { isBagOn: getBoolFromString(bag)  });
       console.log(`car bag is ${bag}`);
-      if (bag == true) {
+      if (getBoolFromString(bag) == true) {
         //* send notify to admin "bag is opened"
         const notify = new Notify({
           action: "bag",
-          sender: mongoose.Schema.Types.ObjectId(source),
+          sender: mongoose.Types.ObjectId(source),
           user: car.admin,
           car: car._id,
         });
