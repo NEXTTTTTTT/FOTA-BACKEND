@@ -7,7 +7,7 @@ const UserScheme = mongoose.Schema(
     password: { type: String, required: true },
     email: { type: String },
     profileImage: { type: String, default: "" },
-    deviceToken: { type: String },
+    deviceToken: { type: String ,default:""},
     isActive: { type: Boolean, default: false },
     currentLocation: {
       type: Map,
