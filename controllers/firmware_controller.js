@@ -27,12 +27,13 @@ const firmwareCtrl = {
   getLatestFirmware: async (req, res) => {
     try {
       const firmware = await Firmeware.findOne().sort({ createdAt: -1 });
-      var stream = fs.createReadStream(firmware.file);
-      stream.on("error", function (error) {
-        res.writeHead(404, "Not Found");
-        res.end();
+      fs.readFile(firmware.file, "utf8", function (err, data) {
+        if (err) {
+          return res.status(400).json({ msg: err.message });
+        } else {
+          return res.status(200).send(data);
+        }
       });
-      stream.pipe(res);
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
