@@ -42,21 +42,23 @@ const employeeCtrl = {
 
   editEmployee :async(req,res)=>{
     try {
-      const {fullname,username, profileImage, password}= req.body;
+      const {fullname, password}= req.body;
+      const profileImage = req.profileImage;
+
       if (password.length < 6)
       return res
         .status(400)
         .json({ msg: "password must be atleast 6 characters long" });
 
       const passwordHash = await bcrypt.hash(password, 13);
-      const employee = await Employee.findOneAndUpdate({ username: username },{
+      const newEmployee = await Employee.findOneAndUpdate({ username: req.employee.username },{
         fullname,profileImage,passwordHash
       });
       
       res.status(200).json({
         msg: "Employee added sucessfully",
         employee: {
-          ...employee._doc,
+          ...newEmployee._doc,
           password: "",
         },
       });
