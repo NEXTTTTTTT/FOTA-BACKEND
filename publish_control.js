@@ -120,7 +120,8 @@ const publishControl = {
         { isDoorLocked: lock }
       );
       console.log(`car lock is ${lock}`);
-      if (lock == false) {
+      if (lock == 'false') {
+        console.log("hey lock")
         //* send notify to admin "ahmed lock off your car doors"
         const notify = new Notify({
           action: "lock",

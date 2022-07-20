@@ -1,6 +1,7 @@
 const employee = require("../model/employee");
 const Firmeware = require("../model/firmware");
 var fs = require("fs");
+var path = require("path");
 
 const firmwareCtrl = {
   createFirmware: async (req, res) => {
@@ -26,15 +27,12 @@ const firmwareCtrl = {
   getLatestFirmware: async (req, res) => {
     try {
       const firmware = await Firmeware.findOne().sort({ createdAt: -1 });
-
-      fs.readFile(firmware.file, "utf8", function (err, data) {
-        if (err) {
-          console.log(err);
-          return res.status(400).send(err);
-        }
-        console.log(data);
-        return res.status(200).send(data);
+      var stream = fs.createReadStream(firmware.file);
+      stream.on("error", function (error) {
+        res.writeHead(404, "Not Found");
+        res.end();
       });
+      stream.pipe(res);
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
