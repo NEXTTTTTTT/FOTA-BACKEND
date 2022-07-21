@@ -68,7 +68,7 @@ const publishControl = {
       const car = await Car.findOneAndUpdate(
         { code: carCode },
         { currentSpeed: parseInt(speed) }
-      ).populate("admin", "deviceToken");
+      ).select("admin _id code carType").populate("admin", "deviceToken");
       console.log(`speed updated to ${speed}`);
 
       if (parseInt(speed) > car.defaultSpeed) {
@@ -84,7 +84,7 @@ const publishControl = {
         sendNotification(
           car.admin.deviceToken,
           "Over Speed",
-          car.brand + " " + car.code + " is on " + speed + " KM/H"
+          car.carType + " " + car.code + " is on " + speed + " KM/H"
         );
       }
     } catch (error) {
@@ -107,8 +107,7 @@ const publishControl = {
         { code: carCode },
         { isMotorOn: getBoolFromString(motor) }
       )
-        .select("admin _id ")
-        .populate("admin", "deviceToken");
+      .select("admin _id code carType").populate("admin", "deviceToken");
       console.log(car);
       console.log(`car motor is ${motor}`);
       if (getBoolFromString(motor) == true) {
@@ -125,7 +124,7 @@ const publishControl = {
         sendNotification(
           car.admin.deviceToken,
           "Motor Running",
-          car.brand + " " + car.code + " is about to take off by "
+          car.carType + " " + car.code + " is about to take off by "
         );
       }
     } catch (error) {
@@ -134,10 +133,10 @@ const publishControl = {
   },
   setLock: async (carCode, lock, source) => {
     try {
-      const car = await Car.updateOne(
+      const car = await Car.findOneAndUpdate(
         { code: carCode },
         { isDoorLocked: getBoolFromString(lock) }
-      );
+      ).select("admin _id code carType").populate("admin", "deviceToken");
       console.log(`car lock is ${lock}`);
       if (getBoolFromString(lock) == false) {
         console.log("hey lock"); //todo: test
@@ -150,11 +149,11 @@ const publishControl = {
         });
         await notify.save();
 
-        const user = await User.findById(car.admin);
+        
         sendNotification(
-          user.deviceToken,
+          car.admin.deviceToken,
           "Lock is broken",
-          car.brand + " " + car.code + " lock is open"
+          car.carType + " " + car.code + " lock is open"
         );
       }
     } catch (error) {
@@ -171,10 +170,10 @@ const publishControl = {
   },
   setBag: async (carCode, bag, source) => {
     try {
-      const car = await Car.updateOne(
+      const car = await Car.findOneAndUpdate(
         { code: carCode },
         { isBagOn: getBoolFromString(bag) }
-      );
+      ).select("admin _id code carType").populate("admin", "deviceToken");
       console.log(`car bag is ${bag}`);
       if (getBoolFromString(bag) == true) {
         //* send notify to admin "bag is opened"
@@ -185,11 +184,11 @@ const publishControl = {
           car: car._id,
         });
         await notify.save();
-        const user = await User.findById(car.admin);
+       
         sendNotification(
-          user.deviceToken,
-          "Car Bag Opened",
-          car.brand + " " + car.code + " bag is open"
+          car.admin.deviceToken,
+          "Bag Opened",
+          car.carType + " " + car.code + " bag is open"
         );
       }
     } catch (error) {
