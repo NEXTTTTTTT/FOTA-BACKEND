@@ -68,7 +68,7 @@ const publishControl = {
       const car = await Car.findOneAndUpdate(
         { code: carCode },
         { currentSpeed: parseInt(speed) }
-      ).select("admin _id code carType").populate("admin", "deviceToken");
+      ).select("admin _id code carType defaultSpeed").populate("admin", "deviceToken");
       console.log(`speed updated to ${speed}`);
 
       if (parseInt(speed) > car.defaultSpeed) {
@@ -124,7 +124,7 @@ const publishControl = {
         sendNotification(
           car.admin.deviceToken,
           "Motor Running",
-          car.carType + " " + car.code + " is about to take off by "
+          car.carType + "-" + car.code + " is about to take off by "
         );
       }
     } catch (error) {
@@ -153,7 +153,7 @@ const publishControl = {
         sendNotification(
           car.admin.deviceToken,
           "Lock is broken",
-          car.carType + " " + car.code + " lock is open"
+          car.carType + "-" + car.code + " lock is open"
         );
       }
     } catch (error) {
@@ -188,7 +188,7 @@ const publishControl = {
         sendNotification(
           car.admin.deviceToken,
           "Bag Opened",
-          car.carType + " " + car.code + " bag is open"
+          car.carType + "-" + car.code + " bag is open"
         );
       }
     } catch (error) {
