@@ -1,7 +1,6 @@
 const employee = require("../model/employee");
 const Firmeware = require("../model/firmware");
 var fs = require("fs");
-var path = require("path");
 
 const firmwareCtrl = {
   createFirmware: async (req, res) => {
@@ -29,10 +28,9 @@ const firmwareCtrl = {
       const firmware = await Firmeware.findOne().sort({ createdAt: -1 });
       fs.readFile(firmware.file, "utf8", function (err, data) {
         if (err) {
-          return res.status(400).json({ msg: err.message });
-        } else {
+          return res.status(400).send(err);
+        } 
           return res.status(200).send(data);
-        }
       });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
