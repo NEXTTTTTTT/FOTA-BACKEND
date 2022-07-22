@@ -1,4 +1,4 @@
-const Users = require("../model/user");
+const Notify = require("../model/notify");
 
 
 const notifyCtrl = {
