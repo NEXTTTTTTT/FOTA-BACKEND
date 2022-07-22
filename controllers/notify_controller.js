@@ -6,7 +6,7 @@ const notifyCtrl = {
         try {
             const notifys = await Notify.find({
                 user: req.user._id,
-            }).populate("sender car", "-password");
+            });
             res.status(200).json({ status: 0, msg: "success", notifys });
         } catch (err) {
             return res.status(500).json({ msg: err.message });
