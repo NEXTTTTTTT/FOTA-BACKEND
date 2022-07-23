@@ -32,7 +32,7 @@ const userCtrl = {
   },
   updateUser: async (req, res) => {
     try {
-      const { fullname, profileImage,deviceToken } = req.body;
+      const { fullname, profileImage,deviceToken,color } = req.body;
       if (!fullname)
         return res.status(500).json({ msg: "Fullname is requires" });
 
@@ -41,7 +41,8 @@ const userCtrl = {
         {
           fullname,
           profileImage,
-          deviceToken
+          deviceToken,
+          color
         }
       );
 

@@ -118,7 +118,6 @@ client.on("message", function (topic, message) {
     case "bag":
       publishCtrl.setBag(carCode, message.toString(),source);
       break;
-
     default:
       break;
   }
