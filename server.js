@@ -85,16 +85,16 @@ client.on("error", function (error) {
 });
 
 // subscribe to topic 'fota2022/#'
-client.subscribe("fota2022/#");
+client.subscribe("car/#");
 
 client.on("message", function (topic, message) {
   //Called each time a message is received
   console.log("Received message:", topic, message.toString());
 
   const topicPath = topic.split("/");
-  const source = topicPath[1]; // if you wanna check who sent message
-  const carCode = topicPath[2];
-  const interface = topicPath[3];
+  const source = topicPath[0]; // if you wanna check who sent message
+  const carCode = topicPath[1];
+  const interface = topicPath[2];
 
   switch (interface) {
     case "speed":

@@ -53,6 +53,8 @@ const sendNotification = (token, title, body) => {
   });
 };
 
+
+
 const publishControl = {
   //* Tracking (temp, speed , location)
   setTemperature: async (carCode, temp, source) => {
@@ -68,15 +70,16 @@ const publishControl = {
       const car = await Car.findOneAndUpdate(
         { code: carCode },
         { currentSpeed: parseInt(speed) }
-      ).select("admin _id code carType defaultSpeed").populate("admin", "deviceToken");
+      ).select("admin _id code carType defaultSpeed lastUser").populate("admin", "deviceToken");
       console.log(`speed updated to ${speed}`);
 
-      if (parseInt(speed) > car.defaultSpeed) {
+      if (parseInt(speed) > car.defaultSpeed && car.lastUser != car.admin) {
         console.log(`speed notify`);
         //* send notify to admin "ahmed driving your car too fast"
         const notify = new Notify({
           action: "speed",
           user: car.admin,
+          sender:car.lastUser,
           car: car._id,
         });
         await notify.save();
@@ -105,12 +108,12 @@ const publishControl = {
     try {
       const car = await Car.findOneAndUpdate(
         { code: carCode },
-        { isMotorOn: getBoolFromString(motor) }
+        { isMotorOn: getBoolFromString(motor) ,lastUser:mongoose.Types.ObjectId(source),}
       )
       .select("admin _id code carType").populate("admin", "deviceToken");
       console.log(car);
       console.log(`car motor is ${motor}`);
-      if (getBoolFromString(motor) == true) {
+      if (getBoolFromString(motor) == true && mongoose.Types.ObjectId(source)!= car.admin) {
         //* send notify to admin "ahmed taking your car"
         const notify = new Notify({
           action: "motor",
@@ -135,10 +138,10 @@ const publishControl = {
     try {
       const car = await Car.findOneAndUpdate(
         { code: carCode },
-        { isDoorLocked: getBoolFromString(lock) }
+        { isDoorLocked: getBoolFromString(lock),lastUser:mongoose.Types.ObjectId(source), }
       ).select("admin _id code carType").populate("admin", "deviceToken");
       console.log(`car lock is ${lock}`);
-      if (getBoolFromString(lock) == false) {
+      if (getBoolFromString(lock) == false && mongoose.Types.ObjectId(source)!= car.admin) {
         console.log("hey lock"); //todo: test
         //* send notify to admin "ahmed lock off your car doors"
         const notify = new Notify({
@@ -162,7 +165,7 @@ const publishControl = {
   },
   setAC: async (carCode, ac, source) => {
     try {
-      await Car.updateOne({ code: carCode }, { isAcOn: ac });
+      await Car.updateOne({ code: carCode }, { isAcOn: ac ,lastUser:mongoose.Types.ObjectId(source),});
       console.log(`car ac is ${ac}`);
     } catch (error) {
       console.error(error.msg);
@@ -172,10 +175,10 @@ const publishControl = {
     try {
       const car = await Car.findOneAndUpdate(
         { code: carCode },
-        { isBagOn: getBoolFromString(bag) }
+        { isBagOn: getBoolFromString(bag),lastUser:mongoose.Types.ObjectId(source), }
       ).select("admin _id code carType").populate("admin", "deviceToken");
       console.log(`car bag is ${bag}`);
-      if (getBoolFromString(bag) == true) {
+      if (getBoolFromString(bag) == true && mongoose.Types.ObjectId(source)!= car.admin) {
         //* send notify to admin "bag is opened"
         const notify = new Notify({
           action: "bag",

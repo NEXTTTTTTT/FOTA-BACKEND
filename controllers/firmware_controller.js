@@ -25,7 +25,7 @@ const firmwareCtrl = {
   },
   getLatestFirmware: async (req, res) => {
     try {
-      const firmware = await Firmeware.findOne({versionName:'V99'}).sort({ createdAt: -1 });
+      const firmware = await Firmeware.findOne().sort({ createdAt: -1 });
       fs.readFile(firmware.file, "utf8", function (err, data) {
         if (err) {
           return res.status(400).send(err);

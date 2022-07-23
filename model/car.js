@@ -10,7 +10,7 @@ const CarScheme = mongoose.Schema(
       type: String
     },
     admin: { type: mongoose.Types.ObjectId, ref: "user" },
-    currentUser: { type: mongoose.Types.ObjectId, ref: "user" },
+    lastUser: { type: mongoose.Types.ObjectId, ref: "user" },
     users: [{ type: mongoose.Types.ObjectId, ref: "user" }],
     defaultSpeed: { type: Number, default: 120 },
     currentSpeed: {
