@@ -59,7 +59,7 @@ const publishControl = {
   //* Tracking (temp, speed , location)
   setTemperature: async (carCode, temp, source) => {
     try {
-      await Car.updateOne({ code: carCode }, { temp: parseInt(temp) });
+      await Car.updateOne({ code: carCode }, { temperature: parseInt(temp) });
       console.log(`temperatue updated to ${temp}`);
     } catch (error) {
       console.error(error.msg);
@@ -141,7 +141,7 @@ const publishControl = {
         { isDoorLocked: getBoolFromString(lock),lastUser:mongoose.Types.ObjectId(source), }
       ).select("admin _id code carType").populate("admin", "deviceToken");
       console.log(`car lock is ${lock}`);
-      if (getBoolFromString(lock) == false && mongoose.Types.ObjectId(source)!= car.admin) {
+      if (getBoolFromString(lock) == false && mongoose.Types.ObjectId(source)!= car.admin){
         console.log("hey lock"); //todo: test
         //* send notify to admin "ahmed lock off your car doors"
         const notify = new Notify({
