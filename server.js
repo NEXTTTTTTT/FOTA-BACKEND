@@ -88,6 +88,8 @@ client.on("error", function (error) {
 client.subscribe("fota2022/#");
 
 client.on("message", function (topic, message) {
+
+
   //Called each time a message is received
   console.log("Received message:", topic, message.toString());
 
@@ -95,6 +97,9 @@ client.on("message", function (topic, message) {
   const source = topicPath[1]; // if you wanna check who sent message
   const carCode = topicPath[2];
   const interface = topicPath[3];
+  
+  // resend the message to hardware
+  client.publish('car/'+carCode+'/'+interface,message);
 
   switch (interface) {
     case "speed":
